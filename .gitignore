@@ -172,3 +172,11 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Django
+*.pyc
+media/
+
+# IDE
+.idea/
+.vscode/
