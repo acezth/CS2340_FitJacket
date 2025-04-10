@@ -1,82 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FitJacket{% endblock %}</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}FitJacket{% endblock %}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+    }
 
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 1rem;
-            z-index: 1000;
-        }
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(30, 42, 56, 0.9);
+      padding: 1rem 0;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #00c6ff;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
 
-        .nav-links a:hover {
-            color: #4CAF50;
-        }
+    .nav-links a:hover {
+      color: #00c6ff;
+      transform: translateY(-1px);
+    }
 
-        .content {
-            padding-top: 5rem;
-        }
-    </style>
-    {% block extra_css %}{% endblock %}
+    .content {
+      padding-top: 6rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="nav-container">
-            <a href="/" class="logo">FitJacket</a>
-            <div class="nav-links">
-                <a href="/">Home</a>
-                <a href="/workouts">Workouts</a>
-                <a href="/social">Social</a>
-                <a href="/logs">Logs</a>
-            </div>
-        </div>
-    </nav>
-    <div class="content">
-        {% block content %}{% endblock %}
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <a href="/" class="logo">FitJacket</a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/workouts">Workouts</a>
+        <a href="/social">Social</a>
+        <a href="/logs">Logs</a>
+      </div>
     </div>
+  </nav>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
 </body>
-</html> 
+</html>

@@ -1,10 +1,189 @@
 {% extends 'home/base.html' %}
 
-{% block title %}Workouts - FitTracker{% endblock %}
+{% block title %}Workouts - FitJacket{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Workouts</h1>
-    <!-- Add workout content here -->
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364); /* Updated to match social.html */
+    color: #fff;
+    padding: 40px 20px;
+  }
+
+  h1, h2 {
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .section {
+    background-color: #1e2a38;
+    border-radius: 12px;
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .log-entry {
+    background-color: #2c3e50;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-left: 5px solid #00c6ff;
+    border-radius: 8px;
+  }
+
+  .ai-suggestion {
+    background-color: #293b5f;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 5px solid #00c6ff;
+  }
+
+  .ai-suggestion h3 {
+    margin: 0 0 8px;
+  }
+
+  .ai-suggestion p {
+    margin: 0;
+  }
+
+  .resuggest-btn {
+    display: block;
+    background-color: #00c6ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px auto 0 auto;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .resuggest-btn:hover {
+    background-color: #0072ff;
+  }
+</style>
+
+<h1>🧠 AI-Powered Fitness Recommendations</h1>
+<p style="text-align: center; margin-bottom: 40px;">Based on your recent workouts, here are personalized suggestions to improve performance, prevent injury, and recover smarter.</p>
+
+<div class="section">
+  <h2>Your Workout Logs</h2>
+  <div class="log-entry">
+    <strong>Chest Day</strong><br>
+    3 sets bench press, 2x10 pushups, 2x8 incline dumbbell press
+  </div>
+  <div class="log-entry">
+    <strong>Leg Day</strong><br>
+    Squats, lunges, hamstring curls, calf raises
+  </div>
+  <div class="log-entry">
+    <strong>HIIT Circuit</strong><br>
+    5 rounds: 30s burpees, 30s mountain climbers, 1 min rest
+  </div>
 </div>
+
+<div class="section" id="workoutSuggestions">
+  <h2>Recommended Workouts</h2>
+  <div class="ai-suggestion">
+    <h3>💪 Upper Body Strength</h3>
+    <p>Incline bench press, cable flys, overhead press, assisted pull-ups</p>
+  </div>
+  <div class="ai-suggestion">
+    <h3>🔥 HIIT Endurance</h3>
+    <p>Tabata cycle: 20s on / 10s off — jump squats, pushups, plank jacks, rest</p>
+  </div>
+  <button class="resuggest-btn" onclick="resuggest('workout')">🔁 Re-suggest Workouts</button>
+</div>
+
+<div class="section" id="rehabSuggestions">
+  <h2>Rehabilitation Exercises</h2>
+  <div class="ai-suggestion">
+    <h3>🦵 Knee Stability Routine</h3>
+    <p>Single-leg balance, wall sits, glute bridges, side leg raises</p>
+  </div>
+  <div class="ai-suggestion">
+    <h3>🧘 Shoulder Mobility</h3>
+    <p>Arm circles, band pull-aparts, doorway stretches, thoracic twists</p>
+  </div>
+  <button class="resuggest-btn" onclick="resuggest('rehab')">🔁 Re-suggest Rehab</button>
+</div>
+
+<div class="section" id="recoverySuggestions">
+  <h2>Recovery Recommendations</h2>
+  <div class="ai-suggestion">
+    <h3>🛌 Sleep Optimization</h3>
+    <p>Maintain consistent sleep schedule, reduce screen time, stretch before bed</p>
+  </div>
+  <div class="ai-suggestion">
+    <h3>🥤 Nutrition & Hydration</h3>
+    <p>Increase protein intake, hydrate with electrolytes post-workout, include omega-3s</p>
+  </div>
+  <button class="resuggest-btn" onclick="resuggest('recovery')">🔁 Re-suggest Recovery</button>
+</div>
+
+<script>
+  const suggestions = {
+    workout: [
+      {
+        title: "🏋️ Power Circuit",
+        text: "Deadlifts, barbell rows, clean and press, kettlebell swings"
+      },
+      {
+        title: "🧗 Functional Training",
+        text: "TRX rows, box jumps, sled push, battle ropes"
+      }
+    ],
+    rehab: [
+      {
+        title: "🦶 Ankle Mobility",
+        text: "Ankle circles, resistance band dorsiflexion, heel walks, calf stretches"
+      },
+      {
+        title: "🧘 Low Back Care",
+        text: "Cat-cow stretches, bird-dogs, child’s pose, pelvic tilts"
+      }
+    ],
+    recovery: [
+      {
+        title: "💧 Hydration Boost",
+        text: "Aim for 3L/day, add electrolytes post-workout, avoid caffeine excess"
+      },
+      {
+        title: "🛀 Muscle Relaxation",
+        text: "Epsom salt baths, foam rolling, light massage, contrast showers"
+      }
+    ]
+  };
+
+  function resuggest(type) {
+    const containerId = {
+      workout: 'workoutSuggestions',
+      rehab: 'rehabSuggestions',
+      recovery: 'recoverySuggestions'
+    }[type];
+
+    const container = document.getElementById(containerId);
+    const entries = suggestions[type];
+    const html = entries.map(entry => `
+      <div class="ai-suggestion">
+        <h3>${entry.title}</h3>
+        <p>${entry.text}</p>
+      </div>
+    `).join('');
+
+    container.innerHTML = `
+      <h2>${container.querySelector('h2').innerText}</h2>
+      ${html}
+      <button class="resuggest-btn" onclick="resuggest('${type}')">🔁 Re-suggest ${capitalize(type)}</button>
+    `;
+  }
+
+  function capitalize(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+</script>
 {% endblock %}

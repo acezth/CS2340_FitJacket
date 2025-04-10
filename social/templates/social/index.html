@@ -1,10 +1,284 @@
 {% extends 'home/base.html' %}
 
-{% block title %}Social - FitTracker{% endblock %}
+{% block title %}Social - FitJacket{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Social</h1>
-    <!-- Add social content here -->
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    padding: 40px 20px;
+  }
+
+  .section {
+    background-color: #1e2a38;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  h2 {
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 5px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  .autocomplete-list {
+    background: #2c3e50;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  .autocomplete-list div {
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .autocomplete-list div:hover {
+    background-color: #3f5874;
+  }
+
+  button {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    width: 100%;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 198, 255, 0.4);
+  }
+
+  ul {
+    padding: 0;
+    margin-top: 10px;
+    list-style: none;
+  }
+
+  li {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+  }
+
+  .compact-btn {
+    background: #ff4d4d;
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .compact-btn:hover {
+    background: #e63946;
+    transform: scale(1.05);
+  }
+
+  .view-btn {
+    background: #2980b9;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-right: 6px;
+  }
+
+  .view-btn:hover {
+    background: #1c6ca1;
+  }
+
+  .group-wrapper {
+    flex: 1;
+  }
+
+  .group-members {
+    display: none;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    background-color: #34495e;
+    border-radius: 6px;
+    padding: 10px;
+  }
+
+  .group-members span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .challenge {
+    background-color: #293c51;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+</style>
+
+<header style="text-align: center; margin-bottom: 40px;">
+  <h1>👥 FitSocial</h1>
+  <p>Connect, Compete, and Grow Together</p>
+</header>
+
+<div class="section">
+  <h2>Add a Friend</h2>
+  <input type="text" id="friendName" placeholder="Search for friends..." oninput="suggest('friend')">
+  <div class="autocomplete-list" id="friendSuggestions"></div>
+  <button onclick="addFriend()">Add Friend</button>
+  <ul id="friendsList"></ul>
 </div>
+
+<div class="section">
+  <h2>Join a Group</h2>
+  <input type="text" id="groupInput" placeholder="Search for groups..." oninput="suggest('group')">
+  <div class="autocomplete-list" id="groupSuggestions"></div>
+  <button onclick="joinGroup()">Join Group</button>
+  <ul id="joinedGroups"></ul>
+</div>
+
+<div class="section">
+  <h2>AI Challenges</h2>
+  <div class="challenge">
+    <strong>🚴 5-Day Cardio Blast</strong>
+    <p>Complete 30 mins of cardio each day for 5 days straight.</p>
+    <button onclick="joinChallenge('Cardio Blast')">Join Challenge</button>
+  </div>
+  <div class="challenge">
+    <strong>💪 Full Body Strength Week</strong>
+    <p>Perform 4 strength workouts this week, focusing on major muscle groups.</p>
+    <button onclick="joinChallenge('Strength Week')">Join Challenge</button>
+  </div>
+  <div class="challenge">
+    <strong>🧘 Mind & Body Reset</strong>
+    <p>Combine 3 yoga sessions with 3 meditations over the next 7 days.</p>
+    <button onclick="joinChallenge('Mind & Body Reset')">Join Challenge</button>
+  </div>
+  <ul id="joinedChallenges"></ul>
+</div>
+
+<script>
+  const mockUsers = ["Alex", "Jordan", "Taylor", "Morgan", "Riley", "Avery", "Chris"];
+  const mockGroups = ["Weekend Warriors", "Morning Joggers", "HIIT Nation", "Yoga & Flow"];
+
+  const mockGroupMembers = {
+    "Weekend Warriors": ["Alex", "Jordan", "Sam", "You"],
+    "Morning Joggers": ["You", "Taylor", "Morgan"],
+    "HIIT Nation": ["Jamie", "Casey", "You"],
+    "Yoga & Flow": ["You", "Riley", "Avery", "Chris"]
+  };
+
+  const isAdmin = true;
+
+  function suggest(type) {
+    const input = document.getElementById(type === 'friend' ? 'friendName' : 'groupInput');
+    const suggestionBox = document.getElementById(type === 'friend' ? 'friendSuggestions' : 'groupSuggestions');
+    const list = type === 'friend' ? mockUsers : mockGroups;
+
+    const val = input.value.toLowerCase();
+    suggestionBox.innerHTML = '';
+
+    if (val.length === 0) return;
+
+    list.filter(item => item.toLowerCase().includes(val)).forEach(name => {
+      const div = document.createElement('div');
+      div.textContent = name;
+      div.onclick = () => {
+        input.value = name;
+        suggestionBox.innerHTML = '';
+      };
+      suggestionBox.appendChild(div);
+    });
+  }
+
+  function addFriend() {
+    const name = document.getElementById('friendName').value.trim();
+    if (name) {
+      const li = document.createElement('li');
+      li.innerHTML = `${name} <button class="compact-btn" onclick="this.parentElement.remove()">Remove</button>`;
+      document.getElementById('friendsList').appendChild(li);
+      document.getElementById('friendName').value = '';
+      document.getElementById('friendSuggestions').innerHTML = '';
+    }
+  }
+
+  function joinGroup() {
+    const group = document.getElementById('groupInput').value.trim();
+    if (group && !document.getElementById(`group-${group}`)) {
+      const li = document.createElement('li');
+      li.id = `group-${group}`;
+
+      const members = mockGroupMembers[group] || ["You"];
+      const memberList = members.map(name => {
+        return isAdmin
+          ? `<span>${name} <button class="compact-btn" onclick="removeMember(this)">✖</button></span>`
+          : `<span>${name}</span>`;
+      }).join('');
+
+      li.innerHTML = `
+        <div class="group-wrapper">
+          <strong>${group}</strong>
+          <div class="group-members">${memberList}</div>
+        </div>
+        <div>
+          <button class="view-btn" onclick="toggleMembers(this)">View</button>
+          <button class="compact-btn" onclick="this.closest('li').remove()">Leave</button>
+        </div>
+      `;
+      document.getElementById('joinedGroups').appendChild(li);
+      document.getElementById('groupInput').value = '';
+      document.getElementById('groupSuggestions').innerHTML = '';
+    }
+  }
+
+  function toggleMembers(button) {
+    const box = button.closest('li').querySelector('.group-members');
+    const show = box.style.display === 'none' || !box.style.display;
+    box.style.display = show ? 'block' : 'none';
+    button.textContent = show ? 'Hide' : 'View';
+  }
+
+  function removeMember(btn) {
+    btn.closest('span').remove();
+  }
+
+  function joinChallenge(name) {
+    const li = document.createElement('li');
+    li.innerHTML = `${name} <button class="compact-btn" onclick="this.parentElement.remove()">Remove</button>`;
+    document.getElementById('joinedChallenges').appendChild(li);
+  }
+</script>
 {% endblock %}
