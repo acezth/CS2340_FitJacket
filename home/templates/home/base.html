@@ -44,6 +44,7 @@
         .nav-links {
             display: flex;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
@@ -55,6 +56,70 @@
 
         .nav-links a:hover {
             color: #4CAF50;
+        }
+
+        .auth-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .welcome-message {
+            color: #4CAF50;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            background-color: rgba(76, 175, 80, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .auth-button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .login-button {
+            background-color: transparent;
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .login-button:hover {
+            background-color: #4CAF50;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .register-button {
+            background-color: #4CAF50;
+            color: white;
+            border: 2px solid #4CAF50;
+        }
+
+        .register-button:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .logout-button {
+            background-color: #ff4444;
+            color: white;
+            border: 2px solid #ff4444;
+        }
+
+        .logout-button:hover {
+            background-color: #cc0000;
+            border-color: #cc0000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 68, 68, 0.2);
         }
 
         .content {
@@ -72,6 +137,18 @@
                 <a href="/workouts">Workouts</a>
                 <a href="/social">Social</a>
                 <a href="/logs">Logs</a>
+                <div class="auth-links">
+                    {% if user.is_authenticated %}
+                        <span class="welcome-message">Welcome, {{ user.username }}</span>
+                        <form method="post" action="{% url 'logout' %}" style="margin: 0; display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="auth-button logout-button" style="cursor: pointer; border: none; font-family: inherit;">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="auth-button login-button">Login</a>
+                        <a href="{% url 'register' %}" class="auth-button register-button">Register</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
