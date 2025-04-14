@@ -3,81 +3,125 @@
 {% block content %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(rgba(15, 32, 39, 0.85), rgba(32, 58, 67, 0.85), rgba(44, 83, 100, 0.85)),
+                    url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #fff;
+        padding: 40px 20px;
+        min-height: 100vh;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-                        url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-        }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+    .hero-section {
+        background-color: rgba(30, 42, 56, 0.85);
+        border-radius: 12px;
+        padding: 40px;
+        margin: 20px auto;
+        max-width: 800px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        text-align: center;
+        backdrop-filter: blur(5px);
+    }
 
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
+    h1 {
+        font-size: 3rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
+    p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        color: #e0e0e0;
+    }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
+    .cta-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+    }
 
-        .cta-button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+    }
+
+    .features-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .feature-card {
+        background-color: rgba(30, 42, 56, 0.85);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-card h2 {
+        color: #00c6ff;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .feature-card p {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="hero-section">
         <h1>Welcome to FitJacket</h1>
         <p>
             Discover a better way to live healthy and stay fit. Join our community 
             of health enthusiasts and transform your life today.
         </p>
-        <a href="#" class="cta-button">Get Started</a>
+        <a href="{% url 'register' %}" class="cta-button">Get Started</a>
     </div>
-</body>
-</html>
+
+    <div class="features-section">
+        <div class="feature-card">
+            <h2>💪 Personalized Workouts</h2>
+            <p>Get AI-powered workout recommendations tailored to your goals and fitness level.</p>
+        </div>
+        <div class="feature-card">
+            <h2>🤝 Community Support</h2>
+            <p>Connect with other fitness enthusiasts, share achievements, and stay motivated together.</p>
+        </div>
+        <div class="feature-card">
+            <h2>📊 Track Your Progress</h2>
+            <p>Monitor your fitness journey with detailed logs and analytics to see your improvement over time.</p>
+        </div>
+    </div>
+</div>
 {% endblock %}

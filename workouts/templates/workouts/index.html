@@ -6,7 +6,11 @@
 <style>
   body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364); /* Updated to match social.html */
+    background: linear-gradient(rgba(15, 32, 39, 0.85), rgba(32, 58, 67, 0.85), rgba(44, 83, 100, 0.85)),
+                url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: #fff;
     padding: 40px 20px;
   }
@@ -17,12 +21,13 @@
   }
 
   .section {
-    background-color: #1e2a38;
+    background-color: rgba(30, 42, 56, 0.85);
     border-radius: 12px;
     padding: 25px;
     margin: 20px auto;
     max-width: 800px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
   }
 
   .log-entry {
@@ -144,7 +149,7 @@
       },
       {
         title: "🧘 Low Back Care",
-        text: "Cat-cow stretches, bird-dogs, child’s pose, pelvic tilts"
+        text: "Cat-cow stretches, bird-dogs, child's pose, pelvic tilts"
       }
     ],
     recovery: [
