@@ -1,0 +1,152 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Strava Activities - FitJacket{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(rgba(15, 32, 39, 0.85), rgba(32, 58, 67, 0.85), rgba(44, 83, 100, 0.85)),
+                url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #fff;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .section {
+    background-color: rgba(30, 42, 56, 0.85);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .activity-card {
+    background-color: rgba(40, 55, 71, 0.7);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #00c6ff;
+  }
+
+  .activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .activity-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #00c6ff;
+  }
+
+  .activity-date {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+  }
+
+  .activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stat-item {
+    background-color: rgba(0, 198, 255, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #00c6ff;
+  }
+
+  .connect-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+  }
+
+  .connect-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+  }
+</style>
+
+<div class="container">
+  <div class="section">
+    <h1>Strava Activities</h1>
+    
+    {% if not user.stravauser %}
+      <p>Connect your Strava account to view your activities.</p>
+      <a href="{% url 'strava_connect' %}" class="connect-button">Connect with Strava</a>
+    {% else %}
+      {% for activity in activities %}
+        <div class="activity-card">
+          <div class="activity-header">
+            <span class="activity-name">{{ activity.name }}</span>
+            <span class="activity-date">{{ activity.start_date|date:"F j, Y" }}</span>
+          </div>
+          <div class="activity-stats">
+            <div class="stat-item">
+              <div class="stat-label">Distance</div>
+              <div class="stat-value">{{ activity.distance|floatformat:2 }} km</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Moving Time</div>
+              <div class="stat-value">{{ activity.moving_time|time:"H:i:s" }}</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Elevation Gain</div>
+              <div class="stat-value">{{ activity.total_elevation_gain|floatformat:0 }} m</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Type</div>
+              <div class="stat-value">{{ activity.activity_type }}</div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No activities found. Start recording your workouts on Strava!</p>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %} 

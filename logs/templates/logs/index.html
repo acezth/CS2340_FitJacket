@@ -26,12 +26,13 @@
   }
 
   .log-form {
-    background-color: #1e2a38;
+    background-color: rgba(30, 42, 56, 0.85);
     border-radius: 12px;
     padding: 20px;
     max-width: 500px;
     margin: 0 auto 40px auto;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
   }
 
   .log-form h2 {
@@ -47,36 +48,41 @@
     border: none;
     border-radius: 8px;
     font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
   }
 
   .log-form button {
     width: 100%;
     padding: 12px;
     font-size: 1rem;
-    background-color: #00c6ff;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    color: white;
   }
 
   .log-form button:hover {
-    background-color: #0072ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
   }
 
   .logs-list {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
   }
 
   .log-entry {
-    background-color: #1c1c1c;
-    border-left: 6px solid #00c6ff;
+    background-color: rgba(40, 55, 71, 0.7);
+    border-left: 4px solid #00c6ff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 8px;
     margin-bottom: 20px;
     transition: transform 0.3s ease;
     position: relative;
+    backdrop-filter: blur(5px);
   }
 
   .log-entry:hover {
@@ -85,6 +91,7 @@
 
   .log-entry h3 {
     margin: 0 0 10px;
+    color: #00c6ff;
   }
 
   .log-entry p {
@@ -98,17 +105,67 @@
 
   .log-buttons button {
     flex: 1;
-    background-color: #555;
+    background-color: rgba(0, 198, 255, 0.1);
     border: none;
     padding: 8px;
     font-size: 0.9rem;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    color: #00c6ff;
   }
 
   .log-buttons button:hover {
-    background-color: #888;
+    background-color: rgba(0, 198, 255, 0.2);
+  }
+
+  .activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stat-item {
+    background-color: rgba(0, 198, 255, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #00c6ff;
+  }
+
+  .strava-connect {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .strava-connect a {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+  }
+
+  .strava-connect a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
   }
 
   .section {
@@ -127,15 +184,58 @@
   <p>Track your workouts. Stay motivated.</p>
 </header>
 
-<div class="log-form">
-  <h2>Log a Workout</h2>
-  <input type="text" id="workoutTitle" placeholder="Workout Title (e.g., Chest Day)" />
-  <textarea id="workoutDetails" rows="4" placeholder="Details (e.g., 3 sets of bench press, 2x10 pushups)"></textarea>
-  <button onclick="addLog()">Add Workout</button>
-</div>
+<div class="section">
+  {% if not user.stravauser %}
+    <div class="strava-connect">
+      <p>Connect your Strava account to automatically sync your activities!</p>
+      <a href="{% url 'strava_connect' %}">Connect with Strava</a>
+    </div>
+  {% endif %}
 
-<div class="logs-list" id="logsList">
-  <!-- Logs appear here -->
+  <div class="log-form">
+    <h2>Log a Workout</h2>
+    <input type="text" id="workoutTitle" placeholder="Workout Title (e.g., Chest Day)" />
+    <textarea id="workoutDetails" rows="4" placeholder="Details (e.g., 3 sets of bench press, 2x10 pushups)"></textarea>
+    <button onclick="addLog()">Add Workout</button>
+  </div>
+
+  <div class="logs-list" id="logsList">
+    <!-- Manual logs appear here -->
+  </div>
+
+  {% if user.stravauser %}
+    <div class="strava-activities">
+      <h2>Strava Activities</h2>
+      {% for activity in strava_activities %}
+        <div class="log-entry">
+          <div class="activity-header">
+            <h3>{{ activity.name }}</h3>
+            <p class="activity-date">{{ activity.start_date|date:"F j, Y" }}</p>
+          </div>
+          <div class="activity-stats">
+            <div class="stat-item">
+              <div class="stat-label">Distance</div>
+              <div class="stat-value">{{ activity.distance|floatformat:2 }} km</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Moving Time</div>
+              <div class="stat-value">{{ activity.moving_time|time:"H:i:s" }}</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Elevation Gain</div>
+              <div class="stat-value">{{ activity.total_elevation_gain|floatformat:0 }} m</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Type</div>
+              <div class="stat-value">{{ activity.activity_type }}</div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No Strava activities found. Start recording your workouts on Strava!</p>
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
 
 <script>
