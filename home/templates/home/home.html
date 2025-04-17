@@ -108,6 +108,11 @@
         </p>
         <a href="{% url 'register' %}" class="cta-button">Get Started</a>
     </div>
+    <div class="feature-card" style="margin: 20px auto; max-width: 500px; text-align: center;">
+        <h2>🌤️ Weather Where You Are</h2>
+        <p id="weatherResult">Checking your weather...</p>
+    </div>
+
 
     <div class="features-section">
         <div class="feature-card">
@@ -124,4 +129,53 @@
         </div>
     </div>
 </div>
+
+<script>
+  const apiKey = "11a6808653715a0337808606c702a821"; // Replace this with your OpenWeather API key
+
+  function getWeather(lat, lon) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const weather = data.weather[0].description;
+        const temp = data.main.temp;
+        const city = data.name;
+
+        document.getElementById("weatherResult").innerHTML =
+          `In <strong>${city}</strong>, it’s <strong>${weather}</strong> and <strong>${temp}°F</strong>.`;
+
+        if (temp < 50 || weather.includes("rain")) {
+          document.getElementById("weatherResult").innerHTML += "<br>💡 Try an indoor workout today!";
+        } else {
+          document.getElementById("weatherResult").innerHTML += "<br>💪 Great weather to get outside!";
+        }
+      })
+      .catch(error => {
+        document.getElementById("weatherResult").innerText = "Could not fetch weather.";
+        console.error("Weather error:", error);
+      });
+  }
+
+  function getLocationAndWeather() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          getWeather(lat, lon);
+        },
+        error => {
+          document.getElementById("weatherResult").innerText = "Location access denied.";
+        }
+      );
+    } else {
+      document.getElementById("weatherResult").innerText = "Geolocation not supported.";
+    }
+  }
+
+  window.onload = getLocationAndWeather;
+</script>
+
 {% endblock %}
