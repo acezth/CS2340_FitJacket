@@ -73,7 +73,9 @@
 </style>
 
 <h1>🧠 AI-Powered Fitness Recommendations</h1>
-<p style="text-align: center; margin-bottom: 40px;">Based on your recent workouts, here are personalized suggestions to improve performance, prevent injury, and recover smarter.</p>
+<p style="text-align: center; margin-bottom: 40px;">
+  Based on your recent workouts, here are personalized suggestions to improve performance, prevent injury, and recover smarter.
+</p>
 
 <div class="section">
   <h2>Your Workout Logs</h2>
@@ -131,39 +133,6 @@
 </div>
 
 <script>
-  const suggestions = {
-    workout: [
-      {
-        title: "🏋️ Power Circuit",
-        text: "Deadlifts, barbell rows, clean and press, kettlebell swings"
-      },
-      {
-        title: "🧗 Functional Training",
-        text: "TRX rows, box jumps, sled push, battle ropes"
-      }
-    ],
-    rehab: [
-      {
-        title: "🦶 Ankle Mobility",
-        text: "Ankle circles, resistance band dorsiflexion, heel walks, calf stretches"
-      },
-      {
-        title: "🧘 Low Back Care",
-        text: "Cat-cow stretches, bird-dogs, child's pose, pelvic tilts"
-      }
-    ],
-    recovery: [
-      {
-        title: "💧 Hydration Boost",
-        text: "Aim for 3L/day, add electrolytes post-workout, avoid caffeine excess"
-      },
-      {
-        title: "🛀 Muscle Relaxation",
-        text: "Epsom salt baths, foam rolling, light massage, contrast showers"
-      }
-    ]
-  };
-
   function resuggest(type) {
     const containerId = {
       workout: 'workoutSuggestions',
@@ -171,20 +140,38 @@
       recovery: 'recoverySuggestions'
     }[type];
 
-    const container = document.getElementById(containerId);
-    const entries = suggestions[type];
-    const html = entries.map(entry => `
-      <div class="ai-suggestion">
-        <h3>${entry.title}</h3>
-        <p>${entry.text}</p>
-      </div>
-    `).join('');
+    const sectionTitles = {
+      workout: 'Recommended Workouts',
+      rehab: 'Rehabilitation Exercises',
+      recovery: 'Recovery Recommendations'
+    };
 
-    container.innerHTML = `
-      <h2>${container.querySelector('h2').innerText}</h2>
-      ${html}
-      <button class="resuggest-btn" onclick="resuggest('${type}')">🔁 Re-suggest ${capitalize(type)}</button>
-    `;
+    const container = document.getElementById(containerId);
+    const sectionTitle = sectionTitles[type];
+
+    container.innerHTML = `<p style="text-align:center;">⏳ Generating new suggestions...</p>`;
+
+    fetch("{% url 'workouts:ai_suggest' %}?type=" + type)
+      .then(res => res.json())
+      .then(data => {
+        if (data.response) {
+          const entries = data.response.split('\n\n').map((text, i) => {
+            return `<div class="ai-suggestion"><h3>✨ Suggestion ${i + 1}</h3><p>${text}</p></div>`;
+          }).join('');
+
+          container.innerHTML = `
+            <h2>${sectionTitle}</h2>
+            ${entries}
+            <button class="resuggest-btn" onclick="resuggest('${type}')">🔁 Re-suggest ${capitalize(type)}</button>
+          `;
+        } else {
+          container.innerHTML = `<p style="text-align:center;">❌ Failed to get suggestions.</p>`;
+        }
+      })
+      .catch(err => {
+        console.error("OpenAI fetch error:", err);
+        container.innerHTML = `<p style="text-align:center;">❌ Error: ${err.message}</p>`;
+      });
   }
 
   function capitalize(word) {
