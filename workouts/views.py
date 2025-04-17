@@ -1,4 +1,5 @@
 import os
+#keep safe
 #key: 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
 from django.http import JsonResponse
 from django.shortcuts import render
