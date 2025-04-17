@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'workouts',
     'social',
     'logs',
+    'strava',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
+
+# Strava API Configuration
+STRAVA_CLIENT_ID = '156138'
+STRAVA_CLIENT_SECRET = 'b18f772ef02830f0e9ae1a30fa43cf5ad32c21b8'
+STRAVA_REDIRECT_URI = 'http://localhost:8000/strava/callback/'
